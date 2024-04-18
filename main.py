@@ -49,12 +49,9 @@ xgb_pipeline = Pipeline([
 
 # Reduce the number of parameter combinations
 param_grid = {
-    'xgb__learning_rate': [0.01, 0.1, 0.2],
-    'xgb__max_depth': [3, 5, 7, 9],
-    'xgb__min_child_weight': [1, 3, 5, 7],
-    'xgb__gamma': [0, 0.1, 0.2, 0.3, 0.4],
-    'xgb__subsample': [0.5, 0.7, 0.9],
-    'xgb__colsample_bytree': [0.5, 0.7, 0.9],
+    'xgb__learning_rate': [0.05298, 0.05292, 0.0529],
+    'xgb__max_depth': [4],
+    'xgb__min_child_weight': [61,60,59],
 }
 
 # Split the data into training and validation sets
