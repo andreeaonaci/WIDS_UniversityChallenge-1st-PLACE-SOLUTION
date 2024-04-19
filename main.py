@@ -9,14 +9,14 @@ from xgboost import XGBRegressor
 from sklearn.compose import ColumnTransformer
 
 # Load the training dataset into a DataFrame
-train_df = pd.read_csv('train.csv')
+train_df = pd.read_csv('/kaggle/input/wids-clean/lacrima_train.csv')
 
 # Separate features (X) and target variable (y)
 X = train_df.iloc[:, 1:-1]  # Assuming the first column is the ID and the last column is the target
 y = train_df.iloc[:, -1]
 
 # Load the test dataset into a DataFrame
-test_df = pd.read_csv('test.csv')
+test_df = pd.read_csv('/kaggle/input/wids-clean/lacrima_test.csv')
 
 # Identify numeric and non-numeric columns
 numeric_cols = X.select_dtypes(include=['number']).columns
@@ -49,16 +49,16 @@ xgb_pipeline = Pipeline([
 
 # Reduce the number of parameter combinations
 param_grid = {
-    'xgb__learning_rate': [0.05298, 0.05292, 0.0529],
+    'xgb__learning_rate': [0.08, 0.05, 0.7],
     'xgb__max_depth': [4],
-    'xgb__min_child_weight': [61,60,59],
+    'xgb__min_child_weight': [25,60,10],
 }
 
 # Split the data into training and validation sets
 X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.1, random_state=42)
 
 # Reduce the number of cross-validation folds
-grid_search = GridSearchCV(estimator=xgb_pipeline, param_grid=param_grid, cv=4, scoring='neg_mean_squared_error', verbose=3, n_jobs=-1)
+grid_search = GridSearchCV(estimator=xgb_pipeline, param_grid=param_grid, cv=6, scoring='neg_mean_squared_error', verbose=3, n_jobs=-1)
 
 # Fit the GridSearchCV object to the training data
 grid_search.fit(X_train, y_train)
@@ -89,7 +89,8 @@ print("Predictions completed.")
 
 # Write predicted numbers to a text file using index as IDs
 print("Writing rounded predictions to file...")
-with open('SampleSolution.txt', 'w') as file:
+with open('SampleSolution.csv', 'w') as file:
+    file.write("patient_id,treatment_pd\n")
     for index, prediction in zip(test_df.iloc[:, 0], predictions_test):  # Assuming the first column is the ID
         file.write(f'{index},{int(round(prediction))}\n')
 print("Writing to file completed.")
